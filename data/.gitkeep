@@ -1,0 +1,2 @@
+# Este directorio contiene la base de datos SQLite
+# Los archivos .db son ignorados por .gitignore
