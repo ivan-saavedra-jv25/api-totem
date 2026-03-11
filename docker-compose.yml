@@ -2,26 +2,53 @@ version: '3.8'
 
 services:
   api:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: totem-api:dev
+    container_name: totem-api-dev
+    restart: unless-stopped
     ports:
       - "8000:8000"
     environment:
       - DATABASE_URL=sqlite:///./totem.db
+      - SECRET_KEY=dev-secret-key-not-for-production
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
     volumes:
       - ./totem.db:/app/totem.db
+      - .:/app  # Para desarrollo local con hot reload
+    networks:
+      - totem-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # PostgreSQL para desarrollo (opcional)
+  postgres:
+    image: postgres:15-alpine
+    container_name: totem-postgres-dev
     restart: unless-stopped
+    environment:
+      POSTGRES_DB: totem
+      POSTGRES_USER: totem
+      POSTGRES_PASSWORD: devpassword
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - totem-network
+    profiles:
+      - postgres  # Solo se inicia con --profile postgres
 
-  # Future: PostgreSQL service
-  # postgres:
-  #   image: postgres:15
-  #   environment:
-  #     POSTGRES_DB: totem
-  #     POSTGRES_USER: totem
-  #     POSTGRES_PASSWORD: password
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data
-  #   ports:
-  #     - "5432:5432"
+volumes:
+  postgres_dev_data:
+    driver: local
 
-# volumes:
-#   postgres_data:
+networks:
+  totem-network:
+    driver: bridge

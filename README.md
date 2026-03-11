@@ -63,7 +63,61 @@ Una vez iniciado el servidor, visita:
 - **Swagger UI**: `http://localhost:8000/docs`
 - **ReDoc**: `http://localhost:8000/redoc`
 
-## 🔗 Endpoints
+## � CI/CD con Docker
+
+El proyecto incluye un pipeline CI/CD completo con GitHub Actions:
+
+### 🔄 Flujo Automático
+- **Push a `develop`** → Build → Test → Deploy a Staging
+- **Push a `main`** → Build → Test → Security Scan → Deploy a Producción
+
+### 📋 Estructura CI/CD
+```
+.github/workflows/ci-cd.yml    # Pipeline principal
+scripts/deploy.sh              # Script de deploy
+scripts/rollback.sh            # Script de rollback
+docker-compose.yml             # Desarrollo local
+docker-compose.prod.yml        # Producción
+Dockerfile                     # Multi-stage build optimizado
+.dockerignore                  # Optimización de builds
+```
+
+### 🐳 Estrategia de Docker
+- **Multi-stage build** para imágenes ligeras
+- **Security scanning** con Trivy
+- **Health checks** automáticos
+- **Rollback automático** en fallos
+
+### 🔧 Configuración Rápida
+
+1. **Configurar Secrets en GitHub**:
+   ```bash
+   # Obligatorios:
+   STAGING_HOST, STAGING_USER, STAGING_SSH_KEY
+   PROD_HOST, PROD_USER, PROD_SSH_KEY
+   POSTGRES_PASSWORD, SECRET_KEY
+   ```
+
+2. **Preparar Servidores**:
+   ```bash
+   # Instalar Docker y configurar SSH
+   curl -fsSL https://get.docker.com -o get-docker.sh
+   sudo sh get-docker.sh
+   sudo usermod -aG docker deploy
+   ```
+
+3. **Deploy Manual**:
+   ```bash
+   # En servidor
+   ./scripts/deploy.sh staging
+   ./scripts/deploy.sh production
+   ```
+
+### 📚 Documentación Completa
+- [🔐 Configuración de Secrets](docs/SECRETS.md)
+- [🐳 Estrategia de Docker](docs/DOCKER_STRATEGY.md)
+
+## �🔗 Endpoints
 
 ### Productos
 - `GET /products` - Listar todos los productos
