@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./totem.db
+    volumes:
+      - ./totem.db:/app/totem.db
+    restart: unless-stopped
+
+  # Future: PostgreSQL service
+  # postgres:
+  #   image: postgres:15
+  #   environment:
+  #     POSTGRES_DB: totem
+  #     POSTGRES_USER: totem
+  #     POSTGRES_PASSWORD: password
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   ports:
+  #     - "5432:5432"
+
+# volumes:
+#   postgres_data:
