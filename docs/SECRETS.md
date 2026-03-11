@@ -14,9 +14,24 @@ Para configurar los secrets en tu repositorio de GitHub:
 
 #### Para Container Registry
 ```
+DOCKER_USERNAME
+```
+- **Descripción**: Usuario de Docker Hub
+- **Ejemplo**: `ivan-saavedra-jv25`
+
+```
+DOCKER_PASSWORD
+```
+- **Descripción**: Token de acceso personal de Docker Hub
+- **Cómo obtener**: 
+  1. Ve a https://hub.docker.com/settings/security
+  2. Genera un "Access Token"
+  3. Copia el token generado
+
+```
 GITHUB_TOKEN
 ```
-- **Descripción**: Token de GitHub para autenticación con GHCR
+- **Descripción**: Token de GitHub para autenticación (si usas GHCR)
 - **Valor**: Se genera automáticamente, no necesitas configurarlo
 
 #### Para Deploy a Servidores
