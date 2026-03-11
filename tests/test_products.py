@@ -152,6 +152,10 @@ def test_create_product_invalid_data():
     )
     # FastAPI debería validar los datos con Pydantic
     assert response.status_code == 422  # Unprocessable Entity
+    
+    # Verificar que el mensaje de error contiene información sobre los campos inválidos
+    data = response.json()
+    assert "detail" in data
 
 
 def test_update_product():
